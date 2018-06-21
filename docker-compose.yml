@@ -1,12 +1,13 @@
 version: "3"
 services: 
-    # hbase:
+    hbase:
     #     image: hyness/hbase-rest-standalone 
-    #     volumes:
-    #         - ./docker_volumes/hbase/hbase-server-config.xml:/opt/hbase/conf/hbase-site.xml
-    #         - ./docker_volumes/hbase/hbase-data/:/data/hbase
-    #         - ./docker_volumes/hbase/zookeeper-data/:/data/zookeeper
-    #     hostname: hbase
+        image: harisekhon/hbase:1.2
+        volumes:
+            - ./docker_volumes/hbase/hbase-server-config.xml:/opt/hbase/conf/hbase-site.xml
+            - ./docker_volumes/hbase/hbase-data/:/data/hbase
+            - ./docker_volumes/hbase/zookeeper-data/:/data/zookeeper
+        hostname: hbase
     
     elasticsearch:
         image: elasticsearch:5.5.2
@@ -21,40 +22,10 @@ services:
             - "7070:7070"
         volumes:
             - ./docker_volumes/prediction-io-store:/prediction-io/.pio_store
-            # - ./docker_volumes/hbase/hbase-client-config.xml:/prediction-io/vendors/hbase/conf/hbase-site.xml
-            - ./docker_volumes/hbase/hbase-site.xml:/prediction-io/vendors/hbase/conf/hbase-site.xml
-            - ./docker_volumes/hbase/hbase-data/:/prediction-io/vendors/hbase/data
-            - ./docker_volumes/hbase/zookeeper-data/:/prediction-io/vendors/hbase/data/zookeeper
+            - ./docker_volumes/hbase/hbase-client-config.xml:/prediction-io/vendors/hbase/conf/hbase-site.xml
+            # - ./docker_volumes/hbase/hbase-site.xml:/prediction-io/vendors/hbase/conf/hbase-site.xml
+            # - ./docker_volumes/hbase/hbase-data/:/prediction-io/vendors/hbase/data
+            # - ./docker_volumes/hbase/zookeeper-data/:/prediction-io/vendors/hbase/zookeeper
+            # - ./docker_volumes/hbase/hbase-env.sh:/prediction-io/vendors/hbase/conf/hbase-env.sh
             - ./docker_volumes/universal/:/prediction-io/universal
             - ./docker_volumes/pio-env.sh:/prediction-io/conf/pio-env.sh
-        environment:
-            # Elasticsearch
-            PIO_STORAGE_REPOSITORIES_METADATA_NAME: pio_meta
-            PIO_STORAGE_REPOSITORIES_METADATA_SOURCE: ELASTICSEARCH
-            
-            PIO_STORAGE_REPOSITORIES_EVENTDATA_NAME: pio_event
-            PIO_STORAGE_REPOSITORIES_EVENTDATA_SOURCE: HBASE
-
-            PIO_STORAGE_REPOSITORIES_MODELDATA_NAME: pio_model
-            PIO_STORAGE_REPOSITORIES_MODELDATA_SOURCE: LOCALFS
-
-            # Local File System Example
-            PIO_STORAGE_SOURCES_LOCALFS_TYPE: localfs
-            PIO_STORAGE_SOURCES_LOCALFS_PATH: /prediction-io/.pio_store/models
-            
-            # Elasticsearch Example
-            PIO_STORAGE_SOURCES_ELASTICSEARCH_TYPE: elasticsearch
-            PIO_STORAGE_SOURCES_ELASTICSEARCH_HOME: /prediction-io/vendors/elasticsearch
-            # The next line should match the ES cluster.name in ES config
-            PIO_STORAGE_SOURCES_ELASTICSEARCH_CLUSTERNAME: elasticsearch 
-            # For single host Elasticsearch, may add hosts and ports later
-            PIO_STORAGE_SOURCES_ELASTICSEARCH_HOSTS: elasticsearch
-            PIO_STORAGE_SOURCES_ELASTICSEARCH_PORTS: 9300
-
-            # Configure HBase connection:
-            PIO_STORAGE_SOURCES_HBASE_TYPE: hbase
-            HBASE_CONF_DIR: /prediction-io/vendors/hbase/conf
-
-            # Hbase clustered config (use one host/port if not clustered)
-            PIO_STORAGE_SOURCES_HBASE_HOSTS: hbase 
-            PIO_STORAGE_SOURCES_HBASE_PORTS: 0
