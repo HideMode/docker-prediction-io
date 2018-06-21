@@ -31,18 +31,25 @@ RUN add-apt-repository ppa:webupd8team/java -y && \
     rm -r /var/cache/oracle-jdk8-installer
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
+ENV APACHE_SITE http://mirror.bit.edu.cn/apache 
+# ENV APACHE_SITE http://www-us.apache.org/dist
+
 # download PIO source code and create vendors folder
-RUN wget -O - http://www-us.apache.org/dist/predictionio/${PIO_VERSION}/apache-predictionio-${PIO_VERSION}-bin.tar.gz | tar zx && \
+RUN wget -O - ${APACHE_SITE}/predictionio/${PIO_VERSION}/apache-predictionio-${PIO_VERSION}-bin.tar.gz | tar zx && \
     mv PredictionIO* ${PIO_HOME} && \
     mkdir -p ${PIO_HOME}/vendors
 
 #Spark INSTALLATION
-RUN wget -O - http://www-us.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz | tar zx && \
+RUN wget -O - ${APACHE_SITE}/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz | tar zx && \
     mv spark* ${PIO_HOME}/vendors/spark
 
 #ELASTICSEARCH INSTALLATION
 RUN wget -O - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz | tar zx && \
     mv elasticsearch* ${PIO_HOME}/vendors/elasticsearch
+
+#HBASE
+RUN wget -O -  ${APACHE_SITE}/hbase/$HBASE_VERSION/hbase-${HBASE_VERSION}-bin.tar.gz | tar zx && \
+    mv hbase* ${PIO_HOME}/vendors/hbase
 
 #Python SDK
 RUN apt-get install -y python-pip
@@ -52,8 +59,8 @@ RUN pip install predictionio
 #For Spark MLlib
 RUN apt-get install -y libgfortran3 libatlas3-base libopenblas-base
 
-ENV PATH $PATH:$PIO_HOME/bin \
-    $PATH:$PIO_HOME/vendors/spark/bin
+ENV PATH $PIO_HOME/bin:$PATH \
+    PATH $PIO_HOME/vendors/spark/bin:$PATH
 
 
 #make dir and volume for models and universal recommended template
