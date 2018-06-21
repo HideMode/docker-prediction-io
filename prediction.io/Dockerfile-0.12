@@ -60,8 +60,8 @@ RUN pip install predictionio
 RUN apt-get install -y libgfortran3 libatlas3-base libopenblas-base
 
 ENV PATH $PIO_HOME/bin:$PATH \
-    PATH $PIO_HOME/vendors/spark/bin:$PATH
-
+    PATH $PIO_HOME/vendors/spark/bin:$PATH \
+    PATH $PIO_HOME/vendors/hbase/bin:$PATH
 
 #make dir and volume for models and universal recommended template
 RUN mkdir -p ${PIO_HOME}/.pio_store/models
@@ -69,4 +69,4 @@ RUN mkdir -p ${PIO_HOME}/universal
 VOLUME ["${PIO_HOME}/.pio_store"]
 VOLUME ["${PIO_HOME}/universal"]
 # Set the default command:
-CMD ["pio", "eventserver"]
+# CMD ["pio", "eventserver"]
