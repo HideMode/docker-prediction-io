@@ -34,10 +34,11 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 # download PIO source code and create vendors folder
 RUN wget -O - http://www-us.apache.org/dist/predictionio/${PIO_VERSION}/apache-predictionio-${PIO_VERSION}-bin.tar.gz | tar zx && \
     mv PredictionIO* ${PIO_HOME} && \
-    mkdir -p ${PIO_HOME}}/vendors
+    mkdir -p ${PIO_HOME}/vendors
 
 #Spark INSTALLATION
-RUN wget -O - http://www-us.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz | tar zx && mv spark* ${PIO_HOME}/vendors/spark
+RUN wget -O - http://www-us.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz | tar zx && \
+    mv spark* ${PIO_HOME}/vendors/spark
 
 #ELASTICSEARCH INSTALLATION
 RUN wget -O - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz | tar zx && \
