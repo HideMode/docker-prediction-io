@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  # java server
+  decision-java:
+    image: docker-repoer.acxiom.com.cn:5000/de/decision-java:latest
+    ports:
+      - 8082:8081
+    environment:
+      # use ip address to avoid dns parsing erros
+      # mongo host
+      MONGO_HOST: 10.215.65.50
+      # mongo database
+      MONGO_DATABASE: DE
+      # TODO: mongo auth settings
+      MONGO_INITDB_ROOT_USERNAME:
+      MONGO_INITDB_ROOT_PASSWORD:
+  # nodejs server
+  decision-node:
+    image: docker-repo.acxiom.com.cn:5000/de/decision-node:1.0
+    volumes:
+      - ./logs/node/:/opt/DE-api/logs
+    ports:
+      - 8088:8088
+    environment: 
+      MONGO_HOST: 10.215.65.50
+      MONGO_DATABASE: DE
+      API_URL: http://decision-java:8081/api
