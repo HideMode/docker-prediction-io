@@ -2,13 +2,13 @@
 
   <property>
     <name>hbase.master</name>
-    <value>hbase:16000</value>
+    <value>de-hbase:16000</value>
     <description>The host and port that the HBase master runs at.</description>
   </property>
 
   <property>
     <name>hbase.rootdir</name>
-    <value>hdfs://namenode:8020</value>
+    <value>hdfs://de-namenode:8020</value>
     <description>The directory shared by region servers.</description>
   </property>
 
@@ -30,7 +30,7 @@
 
   <property>
     <name>hbase.zookeeper.quorum</name>
-    <value>hbase</value>
+    <value>de-hbase</value>
   </property>
 
   <property>

@@ -7,12 +7,12 @@ ENV HADOOP_VERSION 2.7.2
 ENV HBASE_VERSION 1.2.6.1
 ENV PIO_HOME /prediction-io
 
-RUN cp /etc/default/useradd /etc/default/useradd.bak \
-  && echo "HOME=" >> /etc/default/useradd \
-  && useradd --create-home --shell /usr/sbin/nologin prediction-io \
-  && rm -rf /etc/default/useradd \
-  && mv /etc/default/useradd.bak /etc/default/useradd \
-  && rm /prediction-io/.bash_logout /prediction-io/.bashrc /prediction-io/.profile
+#RUN cp /etc/default/useradd /etc/default/useradd.bak \
+#  && echo "HOME=" >> /etc/default/useradd \
+#  && useradd --create-home --shell /usr/sbin/nologin prediction-io \
+#  && rm -rf /etc/default/useradd \
+#  && mv /etc/default/useradd.bak /etc/default/useradd \
+#  && rm /prediction-io/.bash_logout /prediction-io/.bashrc /prediction-io/.profile
 
 ENV APACHE_SITE http://mirror.bit.edu.cn/apache 
 # ENV APACHE_SITE http://www-us.apache.org/dist

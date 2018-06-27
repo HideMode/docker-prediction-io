@@ -1,0 +1,21 @@
+version: "3"
+services:
+  de-elasticsearch:
+    image: elasticsearch:5.5.2
+    container_name: de-elasticsearch
+    command: [elasticsearch, -Ecluster.name=de-elasticsearch, -Ediscovery.zen.ping.unicast.hosts=de-elasticsearch]
+  de-pio:
+    image: decision-prediction:1.1
+    container_name: de-prediction
+    command: bash -c 'echo "sleeping for 30 seconds" && pio eventserver'
+    ports: 
+      - 7071:7070
+    volumes:
+      - ./prediction/volumes/hadoop/:/etc/hadoop
+      - ./prediction/volumes/prediction-io-store:/prediction-io/.pio_store
+      - ./prediction/volumes/hbase/hbase-client-config.xml:/prediction-io/vendors/hbase/conf/hbase-site.xml
+      - ./prediction/volumes/hbase/hbase-data/:/prediction-io/vendors/hbase/data
+      - ./prediction/volumes/hbase/zookeeper-data/:/prediction-io/vendors/hbase/zookeeper
+      - ./prediction/volumes/hbase/hbase-env.sh:/prediction-io/vendors/hbase/conf/hbase-env.sh
+      - ./prediction/volumes/universal/:/prediction-io/universal
+      - ./prediction/volumes/pio-env.sh:/prediction-io/conf/pio-env.sh

@@ -10,7 +10,7 @@ services:
       - ./hadoop/name:/hadoop/dfs/name
     environment:
       - CLUSTER_NAME=DE_HADOOP_MASTER
-  de-datanode-1:
+  de-datanode:
     image: uhopper/hadoop-datanode:2.7.2
     container_name: de-datanode1
     volumes:
@@ -23,7 +23,7 @@ services:
     environment:
       - CORE_CONF_fs_defaultFS=hdfs://de-namenode:8020
       - YARN_CONF_yarn_log___aggregation___enable=true
-  de-nodemanager-1:
+  de-nodemanager:
     image: uhopper/hadoop-nodemanager:2.7.2
     container_name: de-nodemanager
     environment:
@@ -31,7 +31,7 @@ services:
       - YARN_CONF_yarn_resourcemanager_hostname=de-resourcemanager
       - YARN_CONF_yarn_log___aggregation___enable=true
       - YARN_CONF_yarn_nodemanager_remote___app___log___dir=/app-logs
-  de-spark-1:
+  de-spark:
     image: uhopper/hadoop-spark:2.1.2_2.8.1
     container_name: de-spark
     environment:
@@ -39,7 +39,7 @@ services:
       - YARN_CONF_yarn_resourcemanager_hostname=de-resourcemanager
     command: tail -f /var/log/dmesg
   
-  de-hbase-1:
+  de-hbase:
     image: harisekhon/hbase:1.2
     container_name: de-hbase
     volumes:
@@ -56,10 +56,10 @@ services:
         - 8106:2181
   de-elasticsearch:
     image: elasticsearch:5.5.2
-    container_name: de-elasticsearch
-    command: [elasticsearch, -Ecluster.name=de-elasticsearch, -Ediscovery.zen.ping.unicast.hosts=de-elasticsearch]
+    hostname: elasticsearch
+    command: [elasticsearch, -Dcluster.name=de-elasticsearch, -Ddiscovery.zen.ping.unicast.hosts=de-elasticsearch]
   de-pio:
-    image: decision-prediction:1.0
+    image: decision-prediction:1.1
     container_name: de-prediction
     command: bash -c 'echo "sleeping for 30 seconds" && pio eventserver'
     ports: 
@@ -73,3 +73,7 @@ services:
       - ./prediction/volumes/hbase/hbase-env.sh:/prediction-io/vendors/hbase/conf/hbase-env.sh
       - ./prediction/volumes/universal/:/prediction-io/universal
       - ./prediction/volumes/pio-env.sh:/prediction-io/conf/pio-env.sh
+    depends_on:
+      - de-elasticsearch
+      - de-hbase
+      - de-spark
